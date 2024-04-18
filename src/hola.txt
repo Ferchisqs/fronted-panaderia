@@ -1,0 +1,53 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import socketIOClient from 'socket.io-client';
+import './styles.css';
+
+
+const SOCKET_URL = 'http://localhost:3002';
+
+
+const App = () => {
+  const [nuevoPago, setNuevoPago] = useState(null);
+
+  useEffect(() => {
+    const socket = socketIOClient(SOCKET_URL);
+    socket.on('nuevoPago', (pago) => {
+      setNuevoPago(pago);
+    });
+
+    return () => socket.disconnect();
+  }, []);
+
+  const handleEnviarPagos = async () => {
+    try {
+      const response = await axios.post('http://localhost:3001/pagos', {
+        nombre: 'Jose', 
+        apellido: 'Perez Lopez', 
+        cantidad: '100' 
+      });
+      console.log('Pago enviado correctamente:', response.data);
+    } catch (error) {
+      console.error('Error al enviar el pago:', error,);
+      
+    }
+  };
+
+  return (
+    <div className="app-container">
+      <h1>Pagos</h1>
+      <div className="pagos-form">
+        <button onClick={handleEnviarPagos}>Enviar Pagos</button>
+      </div>
+      {nuevoPago && (
+        <div className="notification">
+          <h2>Nuevo Pago Recibido</h2>
+          <p>Nombre: {nuevoPago.nombre}</p>
+          <p>Apellido: {nuevoPago.apellido}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default App;
