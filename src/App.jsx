@@ -22,7 +22,7 @@ const App = () => {
   });
 
   useEffect(() => {
-    const newSocket = new WebSocket('ws://localhost:4000');
+    const newSocket = new WebSocket('ws://52.20.58.40:4000');
     setSocket(newSocket);
 
     newSocket.onopen = () => {
@@ -48,7 +48,7 @@ const App = () => {
 
   const handleEnviarPagos = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/pagos', formData);
+      const response = await axios.post('http://100.27.84.84:3001/pagos', formData);
       console.log('Compra realizada correctapente:', response.data);
       setNotification({
         message: `Holi ${formData.nombre}, tu pago por el panecillo ${formData.producto.label} esta hecho, gracias por su compra , regrese pronto `
